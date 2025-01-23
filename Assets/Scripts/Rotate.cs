@@ -4,11 +4,27 @@ public class Rotate : MonoBehaviour
 {
     [SerializeField]
     private float _rotateSpeed = 5;
-   
 
-    // Update is called once per frame
+    [SerializeField]
+    private bool _isRotating = true;
+
+   public bool isRotating
+   {
+        get {return _isRotating;}
+        set {_isRotating = value;}
+   }
+
     void Update()
     {
-        gameObject.transform.Rotate(0f, _rotateSpeed * Time.deltaTime, 0f);
+       RotateWeapon();
+    }
+
+    private void RotateWeapon()
+    {
+
+        if (_isRotating)
+        {
+            gameObject.transform.Rotate(0f, _rotateSpeed * Time.deltaTime, 0f);
+        }
     }
 }

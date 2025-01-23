@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Prueba_shooter.sln"
+    "dotnet.defaultSolution": "ZombieShooter.sln"
 }
