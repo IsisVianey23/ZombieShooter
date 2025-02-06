@@ -16,6 +16,7 @@ public class Gun : MonoBehaviour
     private int _cartridgeBulletNumber = 5;
     private int _totalBulletNumber = 0;
     private int _currentBulletNumber = 0;
+    private GetWeapon _getWeapon;
 
     //Animaciones
     [SerializeField]
@@ -24,19 +25,32 @@ public class Gun : MonoBehaviour
     //Texto
     private Text _bulletText;
 
-
+    private void RemoveWeapon()
+    {
+        _getWeapon.RemoveWeapon();
+        _getWeapon = null;
+    }
     public void Shoot()
     {
-        _weaponAnimator.Play("Shoot", -1, 0f); //Para que la animación de disparo vuelva a reproducirses se agregan el -1, 0f
+        if(_currentBulletNumber == 0) //Cuando las balas sean igual a cero, deja de disparar.
+        {
+            if(_totalBulletNumber == 0)
+            {
+                RemoveWeapon(); //Llama al metodo publico que destruye la pistola cuando se acaban las balas.
+            }
+            return;
+        }
+        _weaponAnimator.Play("Shoot", -1, 0f); //Para que la animación de disparo vuelva a reproducirse se agregan el -1, 0f
         GameObject.Instantiate(_bullet, _bulletPivot.position, _bulletPivot.rotation); //Que el arma rote
         _currentBulletNumber--;
         UpdateBulletText();
     }
 
-    public void PickWeapon()
+    public void PickWeapon(GetWeapon getWeapon)
     {
+        _getWeapon = getWeapon;
         _totalBulletNumber = _maxBulletNumber;
-        _currentBulletNumber = _cartridgeBulletNumber;
+        Reload();
         _weaponAnimator.Play("GetWeapon"); //Animación de Agarra pistola
         UpdateBulletText();
     }
@@ -44,15 +58,23 @@ public class Gun : MonoBehaviour
     public void Reload()
     {
 
+       if(_currentBulletNumber == _cartridgeBulletNumber || _totalBulletNumber == 0)
+       {
+            return;
+       }
+
+       int bulletNeeded = _cartridgeBulletNumber - _currentBulletNumber;
+       
         if(_totalBulletNumber >= _cartridgeBulletNumber)
         {
-            _currentBulletNumber = _cartridgeBulletNumber;
+            _currentBulletNumber = bulletNeeded;
         }
         else if(_totalBulletNumber > 0)
         {
             _currentBulletNumber = _totalBulletNumber;
         }
         _totalBulletNumber -= _currentBulletNumber;
+        _weaponAnimator.Play("Reload", -1, 0f);
         UpdateBulletText();
     }
 
@@ -60,7 +82,7 @@ public class Gun : MonoBehaviour
     {
         if(_bulletText == null)
         {
-            _bulletText = GameObject.Find("BulletText").GetComponent<Text>();
+            _bulletText = _getWeapon.GetComponent<UIController>().BulletsText;
         }
         _bulletText.text = _currentBulletNumber + "/" + _totalBulletNumber;
     }
