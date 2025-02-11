@@ -40,6 +40,9 @@ public class Gun : MonoBehaviour
             }
             return;
         }
+
+        SoundManager.instance.Play("shoot");
+        SoundManager.instance.Play("reload");
         _weaponAnimator.Play("Shoot", -1, 0f); //Para que la animación de disparo vuelva a reproducirse se agregan el -1, 0f
         GameObject.Instantiate(_bullet, _bulletPivot.position, _bulletPivot.rotation); //Que el arma rote
         _currentBulletNumber--;
