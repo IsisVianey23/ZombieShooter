@@ -25,12 +25,18 @@ public class Gun : MonoBehaviour
     //Texto
     private Text _bulletText;
 
-    private void RemoveWeapon()
+   
+
+    public void PickWeapon(GetWeapon getWeapon)
     {
-        _getWeapon.RemoveWeapon();
-        _getWeapon = null;
+        _getWeapon = getWeapon;
+        _totalBulletNumber = _maxBulletNumber;
+        Reload();
+        _weaponAnimator.Play("GetWeapon"); //Animación de Agarra pistola
+        UpdateBulletText();
     }
-    public void Shoot()
+
+     public void Shoot()
     {
         if(_currentBulletNumber == 0) //Cuando las balas sean igual a cero, deja de disparar.
         {
@@ -42,19 +48,9 @@ public class Gun : MonoBehaviour
         }
 
         SoundManager.instance.Play("shoot");
-        SoundManager.instance.Play("reload");
         _weaponAnimator.Play("Shoot", -1, 0f); //Para que la animación de disparo vuelva a reproducirse se agregan el -1, 0f
         GameObject.Instantiate(_bullet, _bulletPivot.position, _bulletPivot.rotation); //Que el arma rote
         _currentBulletNumber--;
-        UpdateBulletText();
-    }
-
-    public void PickWeapon(GetWeapon getWeapon)
-    {
-        _getWeapon = getWeapon;
-        _totalBulletNumber = _maxBulletNumber;
-        Reload();
-        _weaponAnimator.Play("GetWeapon"); //Animación de Agarra pistola
         UpdateBulletText();
     }
 
@@ -76,6 +72,7 @@ public class Gun : MonoBehaviour
         {
             _currentBulletNumber = _totalBulletNumber;
         }
+        SoundManager.instance.Play("reload");
         _totalBulletNumber -= _currentBulletNumber;
         _weaponAnimator.Play("Reload", -1, 0f);
         UpdateBulletText();
@@ -90,4 +87,9 @@ public class Gun : MonoBehaviour
         _bulletText.text = _currentBulletNumber + "/" + _totalBulletNumber;
     }
 
+ private void RemoveWeapon()
+    {
+        _getWeapon.RemoveWeapon();
+        _getWeapon = null;
+    }
 }

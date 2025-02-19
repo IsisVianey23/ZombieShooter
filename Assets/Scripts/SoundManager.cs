@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -15,21 +15,25 @@ public class SoundManager : MonoBehaviour
     Dictionary<string,AudioClip> audioDictionary;
     void Awake()
     {
-        if(instance == null){
+        if(instance == null)
+        {
             instance = this;
-        }else if(instance != this){
+        }else if(instance != this)
+        {
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
 
         audioDictionary = new Dictionary<string,AudioClip>();
-        foreach(string key in audioList){
+        foreach(string key in audioList)
+        {
             AudioClip audio = Resources.Load<AudioClip>("Audio/" + audioPrefix + key); 
             audioDictionary.Add(key,audio);
         }
     }
 
-    public void Play(string soundname,float volume, float pitch) {
+    public void Play(string soundname,float volume, float pitch) 
+    {
         
         if (!audioDictionary.ContainsKey(soundname)) {
             Debug.LogWarning("SoundManager: Tried to play undefined sound: " + soundname);
@@ -41,18 +45,24 @@ public class SoundManager : MonoBehaviour
     
     }
 
-    public void Play(string soundname){
+    public void Play(string soundname)
+    {
         Play(soundname,1f,1f);
     }
 
-    public void Play(string soundname,float volume){
+    public void Play(string soundname,float volume)
+    {
         Play(soundname,volume,1f);
     }
 
-    public void PlayMusic(string soundname,float volume){
-        if (!audioDictionary.ContainsKey(soundname)) {
+    public void PlayMusic(string soundname,float volume)
+    {
+        if (!audioDictionary.ContainsKey(soundname))
+        {
             Debug.LogWarning("SoundManager: Tried to play undefined sound: " + soundname);
-        }else{
+        }
+        else
+        {
             musicS.Stop();
             musicS.loop = true;
             musicS.clip = audioDictionary[soundname];
@@ -61,22 +71,26 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void PlayMusic(string soundname){
+    public void PlayMusic(string soundname)
+    {
         PlayMusic(soundname,1f);
     }
 
-    public void PlayAudioClip(AudioClip audio,float pitch){
+    public void PlayAudioClip(AudioClip audio,float pitch)
+    {
         audioS.clip = audio;
         audioS.pitch = pitch;
         audioS.volume = 1f;
         audioS.Play();
     }
 
-    public void StopMusic(){
+    public void StopMusic()
+    {
         musicS.Stop();
     }
 
-    public void SetMixerVolume(float volume){
+    public void SetMixerVolume(float volume)
+    {
 
         masterMixer.SetFloat("masterVolume",volume);
     }
